@@ -336,7 +336,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="langoo-home.html" class="nav-logo">Lang<span>oo</span></a>
+  <a href="home.html" class="nav-logo">Lang<span>oo</span></a>
   <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
 </nav>
 
@@ -641,9 +641,9 @@ async function inscrire() {
     // Redirection après 2 secondes
     setTimeout(() => {
       if (currentRole === 'prof') {
-        window.location.href = 'langoo-dashboard-prof.html';
+        window.location.href = 'dashboard-prof.html';
       } else {
-        window.location.href = 'langoo-dashboard-eleve.html';
+        window.location.href = 'dashboard-eleve.html';
       }
     }, 2000);
 
@@ -691,9 +691,9 @@ async function connecter() {
 
     setTimeout(() => {
       if (profil?.role === 'prof') {
-        window.location.href = 'langoo-dashboard-prof.html';
+        window.location.href = 'dashboard-prof.html';
       } else {
-        window.location.href = 'langoo-dashboard-eleve.html';
+        window.location.href = 'dashboard-eleve.html';
       }
     }, 1500);
 
@@ -716,8 +716,8 @@ supabase.auth.getSession().then(({ data: { session } }) => {
     supabase.from('profiles').select('role').eq('id', session.user.id).single()
       .then(({ data }) => {
         window.location.href = data?.role === 'prof'
-          ? 'langoo-dashboard-prof.html'
-          : 'langoo-dashboard-eleve.html';
+          ? 'dashboard-prof.html'
+          : 'dashboard-eleve.html';
       });
   }
 });
