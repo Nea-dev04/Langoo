@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Langoo — Apprends une langue avec un vrai prof</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f5f0;
+      --bg2: #edeae3;
+      --text: #1a1814;
+      --muted: #6b6760;
+      --accent: #c8a96e;
+      --accent2: #2d4a3e;
+      --glass: rgba(247,245,240,0.7);
+      --border: rgba(26,24,20,0.1);
+      --shadow: 0 8px 40px rgba(26,24,20,0.08);
+      --radius: 16px;
+    }
+    [data-theme="dark"] {
+      --bg: #111009;
+      --bg2: #1c1a14;
+      --text: #f0ece2;
+      --muted: #8a8578;
+      --accent: #c8a96e;
+      --accent2: #4a7c66;
+      --glass: rgba(17,16,9,0.7);
+      --border: rgba(240,236,226,0.08);
+      --shadow: 0 8px 40px rgba(0,0,0,0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600;
+      color: var(--text); text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      font-size: 0.85rem; font-weight: 400; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--text); color: var(--bg) !important;
+      padding: 0.6rem 1.4rem; border-radius: 100px;
+      font-weight: 500 !important; letter-spacing: 0.04em !important;
+      transition: background 0.2s, opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.8; }
+    .theme-toggle {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: 
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(200,169,110,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(45,74,62,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0; opacity: 0.03;
+      background-image: linear-gradient(var(--text) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--text) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 900px; text-align: center;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.4rem 1rem; margin-bottom: 2.5rem;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); background: var(--glass); backdrop-filter: blur(10px);
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-tag-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 300; line-height: 1.05;
+      letter-spacing: -0.02em;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 em {
+      font-style: italic; color: var(--accent);
+    }
+    h1 strong {
+      font-weight: 600; display: block;
+    }
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: 1.05rem; font-weight: 300;
+      color: var(--muted); line-height: 1.7; max-width: 560px; margin-inline: auto;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      margin-top: 2.8rem;
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--text); color: var(--bg);
+      padding: 0.9rem 2.2rem; border-radius: 100px;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.8; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      padding: 0.9rem 2.2rem; border-radius: 100px;
+      font-size: 0.9rem; font-weight: 400; letter-spacing: 0.04em;
+      text-decoration: none; border: 1px solid var(--border); cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-secondary:hover { border-color: var(--text); transform: translateY(-1px); }
+
+    .hero-stats {
+      margin-top: 4rem;
+      display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 600; color: var(--text);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-top: 0.3rem;
+    }
+
+    /* ── LANGUES ── */
+    .langues-strip {
+      padding: 2rem 0;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .langues-track {
+      display: flex; gap: 4rem; align-items: center;
+      animation: scroll 20s linear infinite;
+      width: max-content;
+    }
+    @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .langue-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); white-space: nowrap;
+    }
+    .langue-icon { font-size: 1.4rem; }
+
+    /* ── SECTION TITRE ── */
+    .section { padding: 7rem 3rem; }
+    .section-label {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem; display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300; line-height: 1.15;
+      max-width: 600px;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ── COMMENT ÇA MARCHE ── */
+    .steps { max-width: 1100px; margin: 0 auto; }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem; margin-top: 4rem;
+    }
+    .step-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .step-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem; font-weight: 300; color: var(--border);
+      line-height: 1; margin-bottom: 1.5rem;
+    }
+    .step-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .step-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600; margin-bottom: 0.7rem;
+    }
+    .step-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── PROFS ── */
+    .profs-section { background: var(--bg2); }
+    .profs-inner { max-width: 1100px; margin: 0 auto; }
+    .profs-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem;
+    }
+    .profs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .prof-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .prof-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .prof-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+    .prof-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; color: #fff; font-weight: 600; flex-shrink: 0;
+    }
+    .prof-info h4 {
+      font-size: 0.95rem; font-weight: 500;
+    }
+    .prof-info p { font-size: 0.8rem; color: var(--muted); }
+    .prof-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.3rem 0.8rem;
+      font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .prof-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .prof-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .prof-tag {
+      font-size: 0.72rem; color: var(--muted);
+      background: var(--bg2); border-radius: 4px; padding: 0.2rem 0.5rem;
+    }
+    .stars { color: var(--accent); font-size: 0.8rem; letter-spacing: 0.05em; }
+    .prof-price {
+      margin-top: 1.2rem; padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .price-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600;
+    }
+    .price-label { font-size: 0.75rem; color: var(--muted); }
+    .btn-reserve {
+      background: var(--text); color: var(--bg);
+      border: none; border-radius: 100px;
+      padding: 0.5rem 1.2rem; font-size: 0.8rem; font-weight: 500;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-reserve:hover { opacity: 0.7; }
+
+    /* ── POURQUOI LANGOO ── */
+    .why-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+      align-items: center; max-width: 1100px; margin: 0 auto;
+    }
+    .why-visual {
+      position: relative; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .why-orb {
+      position: absolute;
+      border-radius: 50%; filter: blur(40px); opacity: 0.3;
+    }
+    .why-orb-1 {
+      width: 300px; height: 300px;
+      background: var(--accent);
+      animation: float 6s ease-in-out infinite;
+    }
+    .why-orb-2 {
+      width: 200px; height: 200px;
+      background: var(--accent2);
+      animation: float 8s ease-in-out infinite reverse;
+      top: 20%; right: 10%;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+    .why-card-center {
+      position: relative; z-index: 1;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2rem; width: 80%; text-align: center;
+    }
+    .why-card-center .big-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .why-card-center h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; margin-bottom: 0.5rem;
+    }
+    .why-card-center p { font-size: 0.85rem; color: var(--muted); }
+
+    .why-list { list-style: none; margin-top: 3rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .why-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .why-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: var(--bg2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .why-item h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.2rem; }
+    .why-item p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── TARIFS ── */
+    .tarifs-section { background: var(--bg2); }
+    .tarifs-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .tarifs-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .tarif-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2.5rem 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .tarif-card.featured {
+      background: var(--text); color: var(--bg);
+      border-color: var(--text);
+      transform: scale(1.03);
+    }
+    .tarif-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow); }
+    .tarif-card.featured:hover { transform: translateY(-4px) scale(1.04); }
+    .tarif-langue {
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem; display: block;
+    }
+    .tarif-card.featured .tarif-langue { color: var(--accent); }
+    .tarif-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem; font-weight: 600; line-height: 1;
+      margin: 1rem 0 0.3rem;
+    }
+    .tarif-per { font-size: 0.8rem; opacity: 0.6; }
+    .tarif-desc { font-size: 0.85rem; opacity: 0.7; margin: 1rem 0 1.5rem; line-height: 1.6; }
+    .tarif-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.8rem; }
+    .tarif-features li { font-size: 0.82rem; opacity: 0.8; display: flex; align-items: center; gap: 0.5rem; }
+    .tarif-features li::before { content: '✓'; color: var(--accent); font-weight: 600; }
+    .btn-tarif {
+      width: 100%; padding: 0.8rem; border-radius: 100px;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      border: 1px solid currentColor; background: transparent;
+      color: inherit; transition: all 0.2s;
+    }
+    .tarif-card.featured .btn-tarif {
+      background: var(--bg); color: var(--text); border-color: var(--bg);
+    }
+    .btn-tarif:hover { opacity: 0.7; }
+
+    /* ── TEMOIGNAGES ── */
+    .temoignages-inner { max-width: 1100px; margin: 0 auto; }
+    .temo-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .temo-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem;
+    }
+    .temo-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 300; line-height: 1.6;
+      font-style: italic; margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    .temo-author { display: flex; align-items: center; gap: 0.8rem; }
+    .temo-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent2); display: flex; align-items: center;
+      justify-content: center; font-size: 0.8rem; font-weight: 600; color: #fff;
+    }
+    .temo-name { font-size: 0.85rem; font-weight: 500; }
+    .temo-info { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      padding: 7rem 3rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(200,169,110,0.08) 0%, transparent 70%);
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .cta-inner h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    .cta-inner h2 em { font-style: italic; color: var(--accent); }
+    .cta-inner p { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--text);
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-links a {
+      font-size: 0.8rem; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .section { padding: 5rem 1.5rem; }
+      .why-grid { grid-template-columns: 1fr; }
+      .why-visual { display: none; }
+      footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="home.html" class="nav-logo">Lang<span>oo</span></a>
+  <div class="nav-links">
+    <a href="#comment" onclick="document.getElementById('comment').scrollIntoView({behavior:'smooth'});return false;">Comment ça marche</a>
+    <a href="#profs" onclick="document.getElementById('profs').scrollIntoView({behavior:'smooth'});return false;">Les profs</a>
+    <a href="#tarifs" onclick="document.getElementById('tarifs').scrollIntoView({behavior:'smooth'});return false;">Tarifs</a>
+    <a href="auth.html" class="nav-cta">Commencer</a>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Français · Anglais · Arabe
+    </div>
+    <h1>
+      Apprends une langue<br>
+      avec un <em>vrai</em> prof.<br>
+      <strong>En ligne.</strong>
+    </h1>
+    <p class="hero-sub">
+      Des cours particuliers en visio avec des enseignants certifiés.
+      Choisis ton prof, réserve un créneau, progresse à ton rythme.
+    </p>
+    <div class="hero-actions">
+      <a href="recherche.html" class="btn-primary">Trouver un prof →</a>
+      <a href="#comment" class="btn-secondary" onclick="document.getElementById('comment').scrollIntoView({behavior:'smooth'});return false;">Comment ça marche</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">120+</div>
+        <div class="stat-label">Professeurs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Langues</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Note moyenne</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2 400+</div>
+        <div class="stat-label">Élèves actifs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUES STRIP -->
+<div class="langues-strip">
+  <div class="langues-track">
+    <div class="langue-item"><span class="langue-icon">🇫🇷</span> Français</div>
+    <div class="langue-item"><span class="langue-icon">🇬🇧</span> Anglais</div>
+    <div class="langue-item"><span class="langue-icon">🇸🇦</span> Arabe</div>
+    <div class="langue-item">✦ Tous niveaux</div>
+    <div class="langue-item">◈ Cours particuliers</div>
+    <div class="langue-item">◇ En visio</div>
+    <div class="langue-item">◉ Profs certifiés</div>
+    <div class="langue-item">▲ Flexibilité totale</div>
+    <!-- dupliqué pour boucle infinie -->
+    <div class="langue-item"><span class="langue-icon">🇫🇷</span> Français</div>
+    <div class="langue-item"><span class="langue-icon">🇬🇧</span> Anglais</div>
+    <div class="langue-item"><span class="langue-icon">🇸🇦</span> Arabe</div>
+    <div class="langue-item">✦ Tous niveaux</div>
+    <div class="langue-item">◈ Cours particuliers</div>
+    <div class="langue-item">◇ En visio</div>
+    <div class="langue-item">◉ Profs certifiés</div>
+    <div class="langue-item">▲ Flexibilité totale</div>
+  </div>
+</div>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="section" id="comment">
+  <div class="steps">
+    <div class="reveal">
+      <span class="section-label">Le processus</span>
+      <h2 class="section-title">Simple comme <em>bonjour</em></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔍</div>
+        <h3>Cherche ton prof</h3>
+        <p>Filtre par langue, niveau, disponibilité et spécialité. Consulte les profils, avis et vidéos de présentation.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">02</div>
+        <div class="step-icon">📅</div>
+        <h3>Réserve un créneau</h3>
+        <p>Choisis un horaire qui te convient dans le calendrier du prof. Paiement sécurisé en ligne, confirmation immédiate.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">03</div>
+        <div class="step-icon">🎯</div>
+        <h3>Apprends en visio</h3>
+        <p>Cours 1-to-1 en visioconférence. Le prof s'adapte à ton niveau et tes objectifs. Progresse vraiment.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">04</div>
+        <div class="step-icon">⭐</div>
+        <h3>Laisse un avis</h3>
+        <p>Après chaque cours, évalue ton prof pour aider la communauté. Réserve à nouveau en un clic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFS -->
+<section class="section profs-section" id="profs">
+  <div class="profs-inner">
+    <div class="profs-header reveal">
+      <div>
+        <span class="section-label">Nos enseignants</span>
+        <h2 class="section-title">Des profs <em>passionnés</em></h2>
+      </div>
+      <a href="recherche.html" class="btn-secondary">Voir tous les profs →</a>
+    </div>
+    <div class="profs-grid" id="profs-grid"></div>
+  </div>
+</section>
+
+<!-- POURQUOI LANGOO -->
+<section class="section" id="pourquoi">
+  <div class="why-grid">
+    <div class="reveal">
+      <span class="section-label">Pourquoi Langoo</span>
+      <h2 class="section-title">Tout ce qu'il faut pour <em>vraiment</em> progresser</h2>
+      <ul class="why-list">
+        <li class="why-item">
+          <div class="why-icon">🛡️</div>
+          <div>
+            <h4>Profs vérifiés</h4>
+            <p>Chaque professeur est vérifié par notre équipe. Diplôme, expérience, entretien obligatoire.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-icon">💳</div>
+          <div>
+            <h4>Paiement sécurisé</h4>
+            <p>Paiement par carte via Stripe. Remboursement garanti si le cours n'a pas lieu.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-icon">🕐</div>
+          <div>
+            <h4>Flexibilité totale</h4>
+            <p>Cours à l'heure qui te convient, 7j/7. Annulation gratuite jusqu'à 24h avant.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-icon">💬</div>
+          <div>
+            <h4>Messagerie intégrée</h4>
+            <p>Discute directement avec ton prof avant et après les cours.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="why-visual reveal">
+      <div class="why-orb why-orb-1"></div>
+      <div class="why-orb why-orb-2"></div>
+      <div class="why-card-center">
+        <div class="big-icon">🌍</div>
+        <h3>Apprends n'importe où</h3>
+        <p>Depuis ton canapé, en voyage, ou entre deux rendez-vous. Tout ce qu'il te faut c'est une connexion.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFS -->
+<section class="section tarifs-section" id="tarifs">
+  <div class="tarifs-inner">
+    <div class="reveal">
+      <span class="section-label">Tarification</span>
+      <h2 class="section-title">Des tarifs <em>transparents</em></h2>
+      <p style="color:var(--muted);margin-top:1rem;font-size:0.9rem;">Un tarif unique par langue. Pas de surprise.</p>
+    </div>
+    <div class="tarifs-grid">
+      <div class="tarif-card reveal">
+        <span class="tarif-langue">🇫🇷 Français</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;">Cours de français</h3>
+        <div class="tarif-price">25€</div>
+        <div class="tarif-per">par séance de 60 min</div>
+        <p class="tarif-desc">Pour tous niveaux, du A1 au C2. Grammaire, conversation, préparation aux examens.</p>
+        <ul class="tarif-features">
+          <li>Cours 1-to-1 en visio</li>
+          <li>Prof dédié à tes objectifs</li>
+          <li>Supports de cours inclus</li>
+          <li>Annulation flexible</li>
+        </ul>
+        <button class="btn-tarif" onclick="window.location.href='recherche.html'">Réserver →</button>
+      </div>
+      <div class="tarif-card featured reveal">
+        <span class="tarif-langue">🇬🇧 Anglais</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;">Cours d'anglais</h3>
+        <div class="tarif-price">25€</div>
+        <div class="tarif-per">par séance de 60 min</div>
+        <p class="tarif-desc">Business English, prépa TOEFL/IELTS, conversation quotidienne. Tous niveaux.</p>
+        <ul class="tarif-features">
+          <li>Cours 1-to-1 en visio</li>
+          <li>Prof natif ou certifié</li>
+          <li>Objectifs personnalisés</li>
+          <li>Messagerie illimitée</li>
+        </ul>
+        <button class="btn-tarif" onclick="window.location.href='recherche.html'">Réserver →</button>
+      </div>
+      <div class="tarif-card reveal">
+        <span class="tarif-langue">🇸🇦 Arabe</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;">Cours d'arabe</h3>
+        <div class="tarif-price">25€</div>
+        <div class="tarif-per">par séance de 60 min</div>
+        <p class="tarif-desc">Arabe classique ou dialectal (maghrébin, levantin...). Du débutant à l'avancé.</p>
+        <ul class="tarif-features">
+          <li>Cours 1-to-1 en visio</li>
+          <li>Classique ou dialectal</li>
+          <li>Alphabet inclus si besoin</li>
+          <li>Progression garantie</li>
+        </ul>
+        <button class="btn-tarif" onclick="window.location.href='recherche.html'">Réserver →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="section" id="temoignages">
+  <div class="temoignages-inner">
+    <div class="reveal">
+      <span class="section-label">Témoignages</span>
+      <h2 class="section-title">Ce qu'ils en <em>disent</em></h2>
+    </div>
+    <div class="temo-grid">
+      <div class="temo-card reveal">
+        <p class="temo-quote">"En 3 mois avec Marie, mon niveau d'anglais a vraiment décollé. Je n'aurais jamais progressé aussi vite seul avec une appli."</p>
+        <div class="temo-author">
+          <div class="temo-avatar">KA</div>
+          <div>
+            <div class="temo-name">Karim A.</div>
+            <div class="temo-info">Cours d'anglais · 12 séances</div>
+          </div>
+        </div>
+      </div>
+      <div class="temo-card reveal">
+        <p class="temo-quote">"Mon prof d'arabe est incroyable. Il explique l'alphabet avec patience et adapte chaque cours à mon rythme."</p>
+        <div class="temo-author">
+          <div class="temo-avatar">SB</div>
+          <div>
+            <div class="temo-name">Sophie B.</div>
+            <div class="temo-info">Cours d'arabe · 8 séances</div>
+          </div>
+        </div>
+      </div>
+      <div class="temo-card reveal">
+        <p class="temo-quote">"La réservation est super simple, le prof est ponctuel et les cours sont efficaces. Exactement ce que je cherchais."</p>
+        <div class="temo-author">
+          <div class="temo-avatar">TM</div>
+          <div>
+            <div class="temo-name">Thomas M.</div>
+            <div class="temo-info">Cours de français · 20 séances</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="inscription">
+  <div class="cta-bg"></div>
+  <div class="cta-inner reveal">
+    <h2>Prêt à <em>progresser</em> ?</h2>
+    <p>Rejoins des milliers d'élèves qui apprennent avec Langoo. Ton premier cours est à portée de clic.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="auth.html" class="btn-primary">Je suis élève →</a>
+      <a href="auth.html" class="btn-secondary">Je suis professeur</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Lang<span>oo</span></div>
+  <div class="footer-links">
+    <a href="#">À propos</a>
+    <a href="#">Comment ça marche</a>
+    <a href="#">Devenir prof</a>
+    <a href="#">Contact</a>
+    <a href="#">Mentions légales</a>
+  </div>
+  <div class="footer-copy">© 2025 Langoo · Tous droits réservés</div>
+</footer>
+
+<script>
+// ── THEME ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  btn.textContent = isLight ? '☀️' : '🌙';
+}
+
+// ── PROFS DATA ──
+const profs = [
+  { initiales:'MD', nom:'Marie D.', langue:'Français', niveau:'C2', spec:'Grammaire & Expression', rating:4.9, avis:87, tags:['DALF','TCF','Conversation'] },
+  { initiales:'SL', nom:'Sara L.',  langue:'Français', niveau:'B2', spec:'Conversation fluide',     rating:4.8, avis:54, tags:['Débutants','FLE','Phonétique'] },
+  { initiales:'JS', nom:'John S.',  langue:'Anglais',  niveau:'C1', spec:'Business English',        rating:5.0, avis:112, tags:['TOEFL','IELTS','Business'] },
+  { initiales:'AK', nom:'Ahmed K.', langue:'Arabe',    niveau:'C1', spec:'Arabe classique',          rating:4.9, avis:63, tags:['Classique','Coran','Écriture'] },
+  { initiales:'OR', nom:'Omar R.',  langue:'Arabe',    niveau:'B2', spec:'Arabe dialectal',          rating:4.7, avis:41, tags:['Maghrébin','Levantin','Oral'] },
+  { initiales:'EA', nom:'Emma A.',  langue:'Anglais',  niveau:'C2', spec:'Prépa examens',            rating:4.9, avis:95, tags:['Cambridge','IELTS','Académique'] },
+];
+
+const drapeaux = { 'Français':'🇫🇷', 'Anglais':'🇬🇧', 'Arabe':'🇸🇦' };
+
+function renderProfs() {
+  const grid = document.getElementById('profs-grid');
+  grid.innerHTML = profs.map(p => `
+    <div class="prof-card reveal">
+      <div class="prof-top">
+        <div class="prof-avatar">${p.initiales}</div>
+        <div class="prof-info">
+          <h4>${p.nom}</h4>
+          <p>${drapeaux[p.langue]} ${p.langue} · Niveau ${p.niveau}</p>
+        </div>
+      </div>
+      <div class="prof-badges">
+        <span class="prof-badge">${p.spec}</span>
+      </div>
+      <div class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</div>
+      <small style="color:var(--muted);font-size:0.75rem;">${p.rating}/5 · ${p.avis} avis</small>
+      <div class="prof-tags">
+        ${p.tags.map(t => `<span class="prof-tag">${t}</span>`).join('')}
+      </div>
+      <div class="prof-price">
+        <div>
+          <div class="price-amount">25€</div>
+          <div class="price-label">/ 60 min</div>
+        </div>
+        <button class="btn-reserve" onclick="window.location.href='recherche.html'">Réserver</button>
+      </div>
+    </div>
+  `).join('');
+  observeReveal();
+}
+
+function scrollToInscription() {
+  document.getElementById('inscription').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── SCROLL REVEAL ──
+function observeReveal() {
+  const els = document.querySelectorAll('.reveal:not(.observed)');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => { el.classList.add('observed'); obs.observe(el); });
+}
+
+// ── THEME ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  btn.textContent = isLight ? '🌙' : '☀️';
+}
+
+// ── INIT ──
+renderProfs();
+observeReveal();
+</script>
+</body>
+</html>
